@@ -1,3 +1,5 @@
+/* global BigInt */
+
 import './App.css';
 import err_list from './err.json';
 
@@ -56,14 +58,20 @@ function App() {
     var num;
     var value = event.target.value.toLowerCase();
     if (!isNaN(num = Number(value))) {
-      // Code
+      // Error Code
+      if (num < 0) {
+        // Perform 2s complement if needed
+        num = (0xFFFFFFFFn ^ BigInt(Math.abs(num))) + 1n;
+      }
+
       err_list.forEach((error) => {
-        if (error.code === num) {
+        // eslint-disable-next-line
+        if (BigInt(error.code) == num) {
           data_filter.push(error);
         }
       });
     } else {
-      // Search for error name
+      // Error Name
       err_list.forEach((error) => {
         if (error.error.toLowerCase().startsWith(value)) {
           data_filter.push(error);
